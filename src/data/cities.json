@@ -1,0 +1,52 @@
+{
+    "countries": [
+        {
+            "id": 1,
+            "name": "Spain",
+            "fromColor": "red-500",
+            "viaColor": "yellow-500",
+            "toColor": "red-500",
+            "direction": "b",
+            "cities": [
+                "Madrid",
+                "Barcelona"
+            ]
+        },
+        {
+            "id": 2,
+            "name": "UK",
+            "fromColor": "blue-500",
+            "viaColor": "red-500",
+            "toColor": "blue-500",
+            "direction": "r",
+            "cities": [
+                "London",
+                "Manchester"
+            ]
+        },
+        {
+            "id": 3,
+            "name": "Germany",
+            "fromColor": "black",
+            "viaColor": "red-500",
+            "toColor": "yellow-500",
+            "direction": "b",
+            "cities": [
+                "Berlin",
+                "Munchen"
+            ]
+        },
+        {
+            "id": 4,
+            "name": "Italy",
+            "fromColor": "green-500",
+            "viaColor": "white",
+            "toColor": "red-500",
+            "direction": "r",
+            "cities": [
+                "Rome",
+                "Milano"
+            ]
+        }
+    ]
+}
