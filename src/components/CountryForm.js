@@ -36,7 +36,7 @@ const CountryForm = () => {
 
   return (
     <section>
-      <SectionHeader title='Add new country' />
+      <SectionHeader title={editCountry ? 'Edit country' : 'Add new country'} />
 
       <form className="flex flex-col items-center" onSubmit={handleSubmit}>
         <label htmlFor="name">Name</label>
@@ -44,6 +44,7 @@ const CountryForm = () => {
           type="text"
           name="name"
           className="w-1/2 bg-zinc-800 ring-1 rounded-md mb-3"
+          value={editCountry ? editCountry.name : ''}
           required
         />
   
