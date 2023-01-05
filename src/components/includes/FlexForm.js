@@ -1,6 +1,6 @@
 const FlexForm = (props) => {
   return (
-    <form className="flex flex-col items-center" onSubmit={props.onSubmit}>
+    <form className="flex flex-col items-center mt-2" onSubmit={props.onSubmit}>
         {props.children}
     </form>
   );

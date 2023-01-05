@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   counter: 1,
-  score: 0
+  score: 0,
+  highScore: 0,
 };
 
 export const scoreSlice = createSlice({
@@ -14,14 +15,17 @@ export const scoreSlice = createSlice({
     },
     incrementScore: (state, action) => {
       state.score++;
+
+      if (state.score > state.highScore) state.highScore = state.score;
     },
     resetScore: (state, action) => {
-      state.counter = 1
-      state.score = 0
-    }
+      state.counter = 1;
+      state.score = 0;
+    },
   },
 });
 
-export const { incrementCounter, incrementScore, resetScore } = scoreSlice.actions;
+export const { incrementCounter, incrementScore, resetScore } =
+  scoreSlice.actions;
 
 export default scoreSlice.reducer;

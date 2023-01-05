@@ -1,9 +1,12 @@
+import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { addCountry } from "../features/cities/citiesSlice";
+import { addCountry, updateCountry } from "../features/cities/citiesSlice";
 import RingButton from "./includes/RingButton";
 import RingLink from "./includes/RingLink";
 import SectionHeader from "./includes/SectionHeader";
+import $ from "jquery";
+import FlexForm from "./includes/FlexForm";
 
 const CountryForm = () => {
   const countries = useSelector((state) => state.citiesData.countries);
@@ -12,44 +15,98 @@ const CountryForm = () => {
   const params = useParams();
   const countryId = parseInt(params.id);
 
-  const editCountry = countryId ? countries.find(country => country.id === countryId) : false;
+  const editCountry = countryId
+    ? countries.find((country) => country.id === countryId)
+    : false;
 
-  console.log(editCountry);
-  
+  useEffect(() => {if (countryId && !editCountry) navigate('/')}, [])
+
+  const maxId = () => {
+    let arrayIds = [];
+
+    countries.forEach((country) => {
+      arrayIds.push(parseInt(country.id));
+    });
+
+    return arrayIds.length ? Math.max(...arrayIds) : 0;
+  };
+
+  const [country, setCountry] = useState(
+    editCountry
+      ? editCountry
+      : {
+          id: maxId() + 1,
+          name: "",
+          fromColor: "",
+          viaColor: "",
+          toColor: "",
+          direction: "",
+          cities: [],
+        }
+  );
+
+  useEffect(() => {
+    $(`#fromColor option[value='${country.fromColor}']`).attr(
+      "selected",
+      "selected"
+    );
+    $(`#viaColor option[value='${country.viaColor}']`).attr(
+      "selected",
+      "selected"
+    );
+    $(`#toColor option[value='${country.toColor}']`).attr(
+      "selected",
+      "selected"
+    );
+    $(`#direction div input[value='${country.direction}']`).attr(
+      "checked",
+      "checked"
+    );
+  });
+
+  const handleChange = (e) => {
+    setCountry({
+      ...country,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    const newCountry = {
-      id: countries.length + 1,
-      name: e.target.name.value,
-      fromColor: e.target.fromColor.value,
-      viaColor: e.target.viaColor.value,
-      toColor: e.target.toColor.value,
-      direction: e.target.direction.value,
-      cities: [],
-    };
-
-    dispatch(addCountry(newCountry));
+    editCountry
+      ? dispatch(updateCountry(country))
+      : dispatch(addCountry(country));
 
     navigate("/");
   };
 
   return (
-    <section>
-      <SectionHeader title={editCountry ? 'Edit country' : 'Add new country'} />
+    <section className="text-xs sm:text-sm md:text-base">
+      <SectionHeader title={editCountry ? "Edit country" : "Add new country"} />
 
-      <form className="flex flex-col items-center" onSubmit={handleSubmit}>
+      <p>Add the new country name and don't forget to include its flag colors!</p>
+
+      <FlexForm onSubmit={handleSubmit}>
         <label htmlFor="name">Name</label>
         <input
           type="text"
           name="name"
-          className="w-1/2 bg-zinc-800 ring-1 rounded-md mb-3"
-          value={editCountry ? editCountry.name : ''}
+          className="w-1/2 bg-zinc-800 ring-1 rounded-md sm:mb-3 mb-1"
+          onChange={handleChange}
+          value={country.name}
           required
         />
-  
-        <label>Color 1</label>
-        <select name="fromColor" className="w-1/2 bg-zinc-800 ring-1 rounded-md mb-3" required>
+
+        <label htmlFor="fromColor">Color 1</label>
+        <select
+          name="fromColor"
+          className="w-1/2 bg-zinc-800 ring-1 rounded-md sm:mb-3 mb-1"
+          id="fromColor"
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select...</option>
           <option value="black">Black</option>
           <option value="white">White</option>
           <option value="red-500">Red</option>
@@ -59,9 +116,15 @@ const CountryForm = () => {
           <option value="sky-500">Sky</option>
           <option value="blue-500">Blue</option>
         </select>
-  
-        <label>Color 2</label>
-        <select name="viaColor" className="w-1/2 bg-zinc-800 ring-1 rounded-md mb-3" required>
+
+        <label htmlFor="viaColor">Color 2</label>
+        <select
+          name="viaColor"
+          className="w-1/2 bg-zinc-800 ring-1 rounded-md sm:mb-3 mb-1"
+          id="viaColor"
+          onChange={handleChange}
+        >
+          <option value="">None</option>
           <option value="black">Black</option>
           <option value="white">White</option>
           <option value="red-500">Red</option>
@@ -71,9 +134,16 @@ const CountryForm = () => {
           <option value="sky-500">Sky</option>
           <option value="blue-500">Blue</option>
         </select>
-  
-        <label>Color 3</label>
-        <select name="toColor" className="w-1/2 bg-zinc-800 ring-1 rounded-md mb-3" required>
+
+        <label htmlFor="toColor">Color 3</label>
+        <select
+          name="toColor"
+          className="w-1/2 bg-zinc-800 ring-1 rounded-md sm:mb-3 mb-1"
+          id="toColor"
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select...</option>
           <option value="black">Black</option>
           <option value="white">White</option>
           <option value="red-500">Red</option>
@@ -83,22 +153,34 @@ const CountryForm = () => {
           <option value="sky-500">Sky</option>
           <option value="blue-500">Blue</option>
         </select>
-  
+
         <label htmlFor="direction">Stripes direction</label>
-        <div className="flex w-1/2 justify-evenly">
+        <div className="flex sm:w-1/2 w-3/5 sm:justify-evenly justify-between" id="direction">
           <div className="flex flex-col">
             <label htmlFor="horizontal">Horizontal</label>
-            <input type="radio" name="direction" value="b" required />
+            <input
+              type="radio"
+              name="direction"
+              value="b"
+              onChange={handleChange}
+              required
+            />
           </div>
           <div className="flex flex-col">
             <label htmlFor="vertical">Vertical</label>
-            <input type="radio" name="direction" value="r" />
+            <input
+              type="radio"
+              name="direction"
+              value="r"
+              onChange={handleChange}
+              required
+            />
           </div>
         </div>
-  
-        <RingButton text='Save' ringColor='blue' />
-        <RingLink url='/' text='Back' ringColor='rose' />
-      </form>
+
+        <RingButton text="Save" ringColor="blue" />
+        <RingLink url="/" text="Back" ringColor="rose" />
+      </FlexForm>
     </section>
   );
 };

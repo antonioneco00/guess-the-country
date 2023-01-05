@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FlexForm from "./includes/FlexForm";
@@ -16,6 +17,8 @@ const UpdateCountry = () => {
   });
   const navigate = useNavigate();
 
+  useEffect(() => {if (countries.length === 0) navigate('/')}, [])
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -28,9 +31,11 @@ const UpdateCountry = () => {
     <section>
       <SectionHeader title="Update an existing country" />
 
+      <p>Did you add the wrong flag colors in a country's details? Update a country!</p>
+
       <FlexForm onSubmit={handleSubmit}>
         <label>Country</label>
-        <select name="country" className="bg-zinc-800 rounded-md">
+        <select name="country" className="bg-zinc-800 ring-1 rounded-md mb-3">
           {countriesOptions}
         </select>
         <RingButton text="Update" ringColor="blue" />

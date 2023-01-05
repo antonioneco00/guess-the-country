@@ -11,20 +11,39 @@ import {
 } from "../features/score/scoreSlice";
 import $ from "jquery";
 import RingLink from "./includes/RingLink";
+import { useNavigate } from "react-router-dom";
 
 const Quiz = () => {
+  const countriesData = useSelector((state) => state.citiesData.countries);
   const dispatch = useDispatch();
   const city = useSelector((state) => state.citiesData.randomCity);
   const countries = useSelector((state) => state.citiesData.randomCountries);
   const counter = useSelector((state) => state.score.counter);
   const score = useSelector((state) => state.score.score);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    dispatch(getRandomCity());
-    dispatch(getRandomCountries());
+    const noCities = !countriesData
+      .map((country) => {
+        return country.cities;
+      })
+      .flat().length;
+
+    if (countriesData.length >= 4 && !noCities) {
+      dispatch(getRandomCity());
+      dispatch(getRandomCountries());
+    } else {
+      navigate("/");
+    }
   }, []);
 
   const handleCheckAnswer = (e) => {
+    $(".btn").attr("disabled", "disabled");
+    $("a").css({
+      "pointer-events": "none",
+      'color': '#f00'
+    });
+
     const selectedCountry = parseInt(e.target.id);
 
     const countryData = countries.find(
@@ -46,7 +65,13 @@ const Quiz = () => {
     }
 
     setTimeout(() => {
-      $(".btn").removeClass("shadow-button shadow-green-600 shadow-red-600");
+      $(".btn")
+        .removeClass("shadow-button shadow-green-600 shadow-red-600")
+        .removeAttr("disabled");
+      $("a").css({
+        "pointer-events": "all",
+        'color': '#fff'
+      });
 
       dispatch(getRandomCity());
       dispatch(getRandomCountries());
@@ -62,7 +87,13 @@ const Quiz = () => {
     return (
       <button
         key={country.id}
-        className={`btn bg-gradient-to-${country.direction} from-${country.fromColor} via-${country.viaColor} to-${country.toColor} w-1/2 self-center text-black text-shadow-bordered border-2 border-${country.fromColor} rounded-full px-4 py-1 my-2`}
+        className={`btn bg-gradient-to-${country.direction} from-${
+          country.fromColor
+        } ${country.viaColor && `via-${country.viaColor}`} to-${
+          country.toColor
+        } sm:w-3/4 w-full self-center text-black text-shadow-bordered border-2 border-${
+          country.fromColor
+        } rounded-full px-4 py-1 my-2`}
         id={country.id}
         onClick={handleCheckAnswer}
       >
@@ -73,11 +104,12 @@ const Quiz = () => {
 
   return (
     <section className="flex flex-col" id="quiz">
+      <p>In which country do you find this city?</p>
       <h2 className="text-xl text-fuchsia-500">{city}</h2>
       {countryButtons}
-      <p>{counter}</p>
+      <p>Counter: {counter}</p>
       <p>Score: {score}</p>
-      <RingLink url='/' text='Back' ringColor='rose' onClick={handleReset} />
+      <RingLink url="/" text="Back" ringColor="rose" onClick={handleReset} />
     </section>
   );
 };

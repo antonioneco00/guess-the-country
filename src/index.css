@@ -24,7 +24,3 @@ code {
 .bg-pattern {
   background-image: url('../public/pattern.svg');
 }
-
-.bg-pattern svg defs pattern rect {
-  fill: #0f0;
-}
