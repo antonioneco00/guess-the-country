@@ -1,13 +1,13 @@
 en:
   title: Guess the Country
   description: >
-    This is a customizable geography quiz built with React and Redux Toolkit, styled with TailwindCSS.
+    An interactive and customizable geography quiz built with React and Redux Toolkit, styled with TailwindCSS.
     It comes with default cities and countries but allows users to add, edit, and delete them (CRUD functionality). This makes it perfect for students studying geography and memorizing capitals or important cities from different countries. 
     The data can be saved and stored in localStorage, ensuring persistence even after closing the browser.  
 
 es:
   title: Adivina el País
   description: >
-    Este es un quiz de geografía personalizable desarrollado con React y Redux Toolkit, estilizado con TailwindCSS. 
+    Quiz interactivo y personalizable desarrollado con React y Redux Toolkit, estilizado con TailwindCSS. 
     Incluye algunas ciudades y países por defecto, pero permite añadir, editar y eliminar registros (funcionalidad CRUD). Es ideal para estudiantes que necesitan memorizar capitales o ciudades importantes de distintos países. 
     Los datos se pueden guardar y almacenar en localStorage, garantizando su persistencia incluso después de cerrar el navegador.  
